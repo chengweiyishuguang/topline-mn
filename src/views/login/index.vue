@@ -21,6 +21,7 @@
         slot="button"
         :time="1000*60"
         format="ss s"
+        @finish="isCountDownShow = false"
         >
 
         </van-count-down>
@@ -28,7 +29,9 @@
           v-else
           slot="button"
           size="small"
-          type="primary">
+          type="primary"
+          @click="onSendSmsCode"
+          >
           发送验证码
           </van-button>
       </van-field>
@@ -46,8 +49,10 @@
 </template>
 
 <script>
-import { login } from '@/api/user'
+import { login, getSmsCode } from '@/api/user'
+// import { login } from '@/api/user'
 export default {
+  name: 'LoginPage',
   data () {
     return {
       isCountDownShow: false, // 是否显示倒计时
@@ -57,7 +62,7 @@ export default {
       }
     }
   },
-  name: 'LoginPage',
+
   components: {},
   props: {},
 
@@ -85,6 +90,29 @@ export default {
         this.$toast.fail('登录失败，手机号或验证码错误')
       }
       // 4根据接口返回结果执行后续处理
+    },
+    async onSendSmsCode () {
+      // 1.获取手机号
+      const { mobile } = this.user
+      // 2.校验手机号是否有效
+
+      // 3.发送验证码
+      try {
+        // 显示倒计时
+        this.isCountDownShow = true
+        // 发送
+        await getSmsCode(mobile)
+      } catch (err) {
+        console.log(err)
+        // 发送失败，关闭倒计时
+        this.isCountDownShow = false
+        // 判断如果返回的状态是429说明操作过于频繁给出提示
+        if (err.response.status === 429) {
+          this.$toast('请勿频繁发送')
+          return
+        }
+        this.$toast('发送失败')
+      }
     }
   }
 }
