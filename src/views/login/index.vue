@@ -6,16 +6,40 @@
 
     <!--表单-->
     <van-cell-group>
-      <van-field label="手机号" placeholder="请输入手机号" v-model="user.mobile"/>
+      <van-field label="手机号"
+      placeholder="请输入手机号"
+      v-model="user.mobile">
+      <i class="icon icon-shouji" slot="left-icon"></i>
+      </van-field>
 
-      <van-field label="验证码" placeholder="请输入验证码" v-model="user.code">
-          <van-button slot="button" size="small" type="primary">发送验证码</van-button>
+      <van-field label="验证码"
+       placeholder="请输入验证码"
+       v-model="user.code">
+        <i class="icon icon-mima" slot="left-icon"></i>
+        <van-count-down
+        v-if="isCountDownShow"
+        slot="button"
+        :time="1000*60"
+        format="ss s"
+        >
+
+        </van-count-down>
+          <van-button
+          v-else
+          slot="button"
+          size="small"
+          type="primary">
+          发送验证码
+          </van-button>
       </van-field>
     </van-cell-group>
     <!-- /表单 -->
     <!-- 登陆按钮 -->
     <div class="btn-wrap">
-        <van-button type="info" @click="onLogin">登录</van-button>
+        <van-button type="info"
+        @click="onLogin">
+        登录
+        </van-button>
     </div>
 
   </div>
@@ -26,6 +50,7 @@ import { login } from '@/api/user'
 export default {
   data () {
     return {
+      isCountDownShow: false, // 是否显示倒计时
       user: {
         mobile: '',
         code: ''
