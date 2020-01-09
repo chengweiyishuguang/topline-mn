@@ -15,7 +15,7 @@
       rules="required|length"多个验证规则使用|分隔
       v-slot ="{errors}"获取错误消息-->
     <ValidationObserver ref="form">
-      <ValidationProvider name="手机号" rules="required" >
+      <ValidationProvider name="手机号" rules="required|mobile" >
       <van-field label="手机号"
       placeholder="请输入手机号"
       v-model="user.mobile">
@@ -24,7 +24,7 @@
       <!-- <span>{{errors[0]}}</span> -->
       </ValidationProvider>
 
-      <ValidationProvider name="验证码" rules="required">
+      <ValidationProvider name="验证码" rules="required|code">
       <van-field label="验证码"
        placeholder="请输入验证码"
        v-model="user.code">
@@ -63,6 +63,7 @@
 
 <script>
 import { login, getSmsCode } from '@/api/user'
+import { validate } from 'vee-validate'
 // import { login } from '@/api/user'
 export default {
   name: 'LoginPage',
@@ -88,6 +89,7 @@ export default {
       const user = this.user
       // 2表单验证
       const success = await this.$refs.form.validate()
+      // 如果验证失败，提示错误消息，停止表单提交
       if (!success) {
         // 这里加定时器的原因是因为获取验证失败结果有延迟问题，并不是我们的原因
         setTimeout(() => {
@@ -120,6 +122,20 @@ export default {
       // 1.获取手机号
       const { mobile } = this.user
       // 2.校验手机号是否有效
+      // 参数1：需要校验的数据
+      // 参数2：验证规则
+      // 参数3：一个可选配置对象，例如配置错误消息字段名称name
+      // 返回值：{valid，errors}
+      //          valid: 验证是否成功，成功 true，失败 false
+      //          errors：一个数组，错误提示消息
+      const validateResult = await validate(mobile, 'required|mobile', {
+        name: '手机号'
+      })
+      // 如果验证失败，提示错误信息，停止发送验证码
+      if (!validateResult.valid) {
+        this.$toast(validateResult.errors[0])
+        return
+      }
 
       // 3.发送验证码
       try {
