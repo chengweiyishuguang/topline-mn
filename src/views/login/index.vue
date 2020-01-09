@@ -89,7 +89,14 @@ export default {
       // 2表单验证
       const success = await this.$refs.form.validate()
       if (!success) {
-        console.log('验证失败')
+        // 这里加定时器的原因是因为获取验证失败结果有延迟问题，并不是我们的原因
+        setTimeout(() => {
+          const errors = this.$refs.form.errors
+          // forEach无法停止遍历
+          // find 方法遍历数组，对每个元素执行方法中的条件判定
+          const item = Object.values(errors).find(item => item[0])
+          this.$toast(item[0])
+        }, 100)
         return
       }
       // 表单通过loading转圈圈
