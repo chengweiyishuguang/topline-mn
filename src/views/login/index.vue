@@ -5,17 +5,29 @@
     <!-- /导航栏 -->
 
     <!--表单-->
-    <van-cell-group>
+    <!-- vee-vilidate验证插件的具体使用
+    1使用 ValidationObserver 把需要校验的整个表单包起来
+    2使用 ValidationProvider 把需要校验的表单元素包起来 列入input
+    3通过 ValidationProvider 配置具体的校验规则
+    name 配置验证字段名称
+    rules 验证规则
+      rules="requried"单个验证规则
+      rules="required|length"多个验证规则使用|分隔
+      v-slot ="{errors}"获取错误消息-->
+    <ValidationObserver ref="form">
+      <ValidationProvider name="手机号" rules="required" >
       <van-field label="手机号"
       placeholder="请输入手机号"
       v-model="user.mobile">
-      <i class="icon icon-shouji" slot="left-icon"></i>
       </van-field>
+      <!-- errors[0]获取验证失败的错误消息 -->
+      <!-- <span>{{errors[0]}}</span> -->
+      </ValidationProvider>
 
+      <ValidationProvider name="验证码" rules="required">
       <van-field label="验证码"
        placeholder="请输入验证码"
        v-model="user.code">
-        <i class="icon icon-mima" slot="left-icon"></i>
         <van-count-down
         v-if="isCountDownShow"
         slot="button"
@@ -35,7 +47,8 @@
           发送验证码
           </van-button>
       </van-field>
-    </van-cell-group>
+      </ValidationProvider>
+    </ValidationObserver>
     <!-- /表单 -->
     <!-- 登陆按钮 -->
     <div class="btn-wrap">
@@ -74,6 +87,11 @@ export default {
       // 1获取表单数据
       const user = this.user
       // 2表单验证
+      const success = await this.$refs.form.validate()
+      if (!success) {
+        console.log('验证失败')
+        return
+      }
       // 表单通过loading转圈圈
       this.$toast.loading({
         duration: 0, // 持续展示
