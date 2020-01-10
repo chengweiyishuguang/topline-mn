@@ -8,7 +8,9 @@ import {
   Field,
   Toast,
   CountDown,
-  Icon
+  Icon,
+  Tabbar,
+  TabbarItem
 } from 'vant'
 Vue
   .use(Button)
@@ -19,3 +21,5 @@ Vue
   .use(Toast)
   .use(CountDown)
   .use(Icon)
+  .use(Tabbar)
+  .use(TabbarItem)
