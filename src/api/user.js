@@ -23,3 +23,13 @@ export const getSmsCode = mobile => {
     url: `/app/v1_0/sms/codes/${mobile}`
   })
 }
+/**
+ *
+ * 获取当前用户信息
+ */
+export const getUserInfo = mobile => {
+  return request({
+    method: 'get',
+    url: '/app/v1_0/user'
+  })
+}
