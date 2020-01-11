@@ -28,7 +28,9 @@
       closeable
       close-icon-position="top-left"
       :style="{ height: '100%' }"
-      />
+      >
+      <channel-edit/>
+      </van-popup>
 
   </div>
 </template>
@@ -36,10 +38,12 @@
 <script>
 import { getUserChannels } from '@/api/user'
 import ArticleList from './components/article-list'
+import ChannelEdit from './components/channel-edit'
 export default {
   name: 'HomePage',
   components: {
-    ArticleList
+    ArticleList,
+    ChannelEdit
   },
   data () {
     return {
