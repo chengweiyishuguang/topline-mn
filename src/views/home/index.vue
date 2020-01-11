@@ -29,7 +29,7 @@
       close-icon-position="top-left"
       :style="{ height: '100%' }"
       >
-      <channel-edit/>
+      <channel-edit :user-channels="userChannels" />
       </van-popup>
 
   </div>
@@ -48,7 +48,6 @@ export default {
   data () {
     return {
       active: 0,
-
       userChannels: [], // 用户频道列表
       isChannelEditShow: false
     }
