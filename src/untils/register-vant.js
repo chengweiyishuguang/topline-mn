@@ -13,7 +13,8 @@ import {
   TabbarItem,
   Image,
   Grid,
-  GridItem
+  GridItem,
+  Dialog
 } from 'vant'
 Vue
   .use(Button)
@@ -29,3 +30,4 @@ Vue
   .use(Image)
   .use(Grid)
   .use(GridItem)
+  .use(Dialog)
