@@ -33,3 +33,12 @@ export const getUserInfo = mobile => {
     url: '/app/v1_0/user'
   })
 }
+/**
+ *获取用户频道列表或默认推荐频道列表
+ */
+export const getUserChannels = () => {
+  return request({
+    method: 'get',
+    url: '/app/v1_0/user/channels'
+  })
+}
