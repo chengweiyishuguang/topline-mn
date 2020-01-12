@@ -8,12 +8,14 @@
         type="danger"
          plain>{{isEditShow?'完成':'编辑'}}</van-button>
     </van-cell>
-     <van-grid square>
+     <van-grid :gutter="10">
   <van-grid-item
-    v-for=" channel in userChannels"
+
+    v-for="(channel,index) in userChannels"
     :key="channel.id"
-    :text="channel.name"
+     @click="onUserChannelClick(index)"
   >
+  <span class="text" slot="text" :class="{active:value === index}">{{channel.name}}</span>
   <van-icon v-show="isEditShow" class="close-icon" slot="icon" name="close" />
   </van-grid-item>
 </van-grid>
@@ -40,8 +42,13 @@ export default {
     userChannels: {
       type: Array,
       required: true
+    },
+    value: {
+      type: Number,
+      required: true
     }
   },
+
   data () {
     return {
       allChannels: [], // 所有频道
@@ -70,7 +77,18 @@ export default {
     },
     onAdd (channel) {
       this.userChannels.push(channel)
+    },
+    onUserChannelClick (index) {
+      // 如果是编辑状态，则删除频道
+      if (this.isEditShow) {
+        this.userChannels.splice(index, 1)
+      } else {
+        // 如果是非编辑状态，则切换频道
+        this.$emit('input', index) // 修改激活的标签
+        this.$emit('close') // 关闭弹层
+      }
     }
+
   },
   created () {
     this.loadAllChannels()
@@ -94,5 +112,10 @@ export default {
             }
         }
     }
-
+ .text {
+    font-size: 14px;
+  }
+  .active {
+    color: red;
+  }
 </style>

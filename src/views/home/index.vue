@@ -29,7 +29,17 @@
       close-icon-position="top-left"
       :style="{ height: '100%' }"
       >
-      <channel-edit :user-channels="userChannels" />
+      <!-- 让子组件双向绑定active
+      在子组件上使用v-model
+      默认传递一个名字叫value的数据给子组件:value="active"
+      默认监听名字叫input的自定义事件@input="active=事件参数"
+      当子组件内部发布：this.$emit('input',123)-->
+      <channel-edit
+       :user-channels="userChannels"
+        v-model="active"
+        @close="isChannelEditShow = false"
+
+       />
       </van-popup>
 
   </div>
@@ -47,7 +57,7 @@ export default {
   },
   data () {
     return {
-      active: 0,
+      active: 0, // 控制激活的标签页
       userChannels: [], // 用户频道列表
       isChannelEditShow: false
     }
