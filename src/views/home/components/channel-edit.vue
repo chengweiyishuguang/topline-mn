@@ -18,6 +18,7 @@
     v-for="channel in remainingChannels"
     :key="channel.id"
     :text="channel.name"
+    @click="onAdd(channel)"
   />
 </van-grid>
   </div>
@@ -58,6 +59,9 @@ export default {
     async loadAllChannels () {
       const { data } = await getAllChannels()
       this.allChannels = data.data.channels
+    },
+    onAdd (channel) {
+      this.userChannels.push(channel)
     }
   },
   created () {
