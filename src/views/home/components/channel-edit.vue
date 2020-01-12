@@ -8,7 +8,9 @@
     v-for=" channel in userChannels"
     :key="channel.id"
     :text="channel.name"
-  />
+  >
+  <van-icon class="close-icon" slot="icon" name="close" />
+  </van-grid-item>
 </van-grid>
 
 <van-cell title="推荐频道" :border="false" />
@@ -74,6 +76,17 @@ export default {
 <style scoped lang="less">
     .channel-edit {
         padding:40px ;
+        ::v-deep .van-grid-item__content {
+            position: relative;
+            .van-grid-item__icon-wrapper {
+                position: absolute;
+                top:-10px;
+                right:0px;
+                .close-icon {
+                    font-size:12px;
+                }
+            }
+        }
     }
 
 </style>
