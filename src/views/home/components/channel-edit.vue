@@ -16,13 +16,13 @@
      @click="onUserChannelClick(index)"
   >
   <span class="text" slot="text" :class="{active:value === index}">{{channel.name}}</span>
-  <van-icon v-show="isEditShow && index!==0" class="close-icon" slot="icon" name="close" />
+ <van-icon v-show="isEditShow && index!==0" class="close-icon" slot="icon" name="close" />
   </van-grid-item>
 </van-grid>
 
 <van-cell title="推荐频道" :border="false" />
 
-   <van-grid square>
+   <van-grid :gutter="10">
   <van-grid-item
     v-for="channel in remainingChannels"
     :key="channel.id"
@@ -35,6 +35,7 @@
 
 <script>
 import { getAllChannels } from '@/api/channel'
+import { setItem } from '@/untils/storage'
 
 export default {
   name: 'ChannelEdit',
@@ -89,6 +90,11 @@ export default {
       }
     }
 
+  },
+  watch: {
+    userChannels () {
+      setItem('user-channels', this.userChannels)
+    }
   },
   created () {
     this.loadAllChannels()

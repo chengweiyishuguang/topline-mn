@@ -1,5 +1,5 @@
 <template>
-  <div clss="home-container">
+  <div class="home-container">
       <!-- 导航栏 -->
     <van-nav-bar title="首页" fixed />
       <!-- /导航栏 -->
@@ -49,6 +49,8 @@
 import { getUserChannels } from '@/api/user'
 import ArticleList from './components/article-list'
 import ChannelEdit from './components/channel-edit'
+import { getItem } from '@/untils/storage'
+
 export default {
   name: 'HomePage',
   components: {
@@ -64,9 +66,33 @@ export default {
   },
   methods: {
     async loadUserChannels () {
-      const { data } = await getUserChannels()
-      this.userChannels = data.data.channels
+      // 1. 定义一个变量用来存储频道列表
+      let channels = []
+      // 2. 获取本地存储的频道列表
+      const localUserChannles = getItem('user-channels')
+      // 3. 如果本地存储有，就使用本地存储的
+      if (localUserChannles) {
+        channels = localUserChannles
+      } else {
+        // 4. 如果本地存储没有，则请求获取接口推荐的频道列表
+        const { data } = await getUserChannels()
+        channels = data.data.channels
+      }
+      // 5. 最后，把数据赋值到当前组件中
+      this.userChannels = channels
     }
+
+    // async loadUserChannels () {
+    //   let channel = []
+    //   const localUserChannles = getItem('user-channels')
+    //   if (localUserChannles) {
+    //     channel = localUserChannles
+    //   } else {
+    //     const { data } = await getUserChannels()
+    //     channel = data.data.channels
+    //   }
+    //   this.userChannels = channel
+    // }
   },
   created () {
     this.loadUserChannels()
