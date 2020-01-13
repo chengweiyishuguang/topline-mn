@@ -7,7 +7,7 @@
         v-model="searchText"
         placeholder="请输入搜索关键词"
         show-action
-        @search="onSearch"
+        @search="onSearch(searchText)"
         @cancel="$router.back()"
         @focus="isResultShow=false"
         @input="onSearchInput"
@@ -24,7 +24,7 @@
        v-for="(item,index) in suggestions"
       icon="search"
        :key="index"
-       @click="onSuggestionClick(item)">
+       @click="onSearch(item)">
        <div slot="title" v-html="highlight(item)"></div>
       </van-cell>
 
@@ -43,6 +43,7 @@
       <van-cell :title="item"
         v-for="(item,index) in searchHistories"
         :key="index"
+        @click="onSearch(item)"
       >
         <van-icon name="close"></van-icon>
       </van-cell>
@@ -64,15 +65,18 @@ export default {
   },
   data () {
     return {
-      searchText: '',
-      isResultShow: false,
+      searchText: '', // 搜索内容
+      isResultShow: false, // 搜索结果的显示状态
       suggestions: [], // 联想建议列表
       searchHistories: getItem('search-histories') || []// 搜索历史记录
 
     }
   },
   methods: {
-    onSearch () {
+    onSearch (q) {
+      // q:文本框数据本身，联想建议文本，历史记录文本
+      // 1.修改搜索框的文本内容
+      this.searchText = q
       // 记录搜索历史记录
       const index = this.searchHistories.indexOf(this.searchText)
       if (index !== -1) {
@@ -92,14 +96,7 @@ export default {
     highlight (str) {
       return str.toLowerCase().replace(this.searchText.toLowerCase(),
         `<span style="color:red">${this.searchText}</span>`)
-    },
-    onSuggestionClick (str) {
-      // 更新文本数据
-      this.searchText = str
-      // 展示搜索结果
-      this.isResultShow = true
     }
-
   },
   watch: {
     searchHistories (newVal) {
