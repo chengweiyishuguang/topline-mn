@@ -15,7 +15,7 @@
     </form>
     <!-- /搜索栏 -->
     <!-- 搜索结果 -->
-      <search-result v-if="isResultShow"/>
+      <search-result v-if="isResultShow" :q="searchText"/>
     <!-- /搜获结果 -->
 
     <!-- 联想建议 -->
@@ -23,7 +23,8 @@
       <van-cell
        v-for="(item,index) in suggestions"
       icon="search"
-       :key="index">
+       :key="index"
+       @click="onSuggestionClick(item)">
        <div slot="title" v-html="highlight(item)"></div>
       </van-cell>
 
@@ -75,7 +76,6 @@ export default {
   },
   methods: {
     onSearch () {
-      console.log('onSearch')
       this.isResultShow = true
     },
     async onSearchInput () {
@@ -89,6 +89,12 @@ export default {
     highlight (str) {
       return str.toLowerCase().replace(this.searchText.toLowerCase(),
         `<span style="color:red">${this.searchText}</span>`)
+    },
+    onSuggestionClick (str) {
+      // 更新文本数据
+      this.searchText = str
+      // 展示搜索结果
+      this.isResultShow = true
     }
 
   }
