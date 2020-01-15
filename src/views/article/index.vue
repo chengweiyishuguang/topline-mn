@@ -77,7 +77,8 @@
       />
       <van-icon
         color="#e5645f"
-        name="good-job"
+        :name="article.attitude===1?'good-job':'good-job-o'"
+        @click="onLike"
       />
       <van-icon class="share-icon" name="share" />
     </div>
@@ -90,7 +91,9 @@
 import {
   getArticleById,
   addCollect,
-  deleteCollect
+  deleteCollect,
+  addLike,
+  deleteLike
 } from '@/api/article'
 
 export default {
@@ -143,6 +146,30 @@ export default {
           await addCollect(this.articleId)
           this.article.is_collected = true
           this.$toast.success('收藏成功')
+        }
+      } catch (err) {
+        console.log(err)
+        this.$toast.fail('操作失败')
+      }
+    },
+    async onLike () {
+      // 两个作用：1交互提示2防止网速慢用户连续不断的点击按钮请求
+      this.$toast.loading({
+        duration: 0, // 持续展示toast
+        message: '操作中...',
+        forbidClick: true// 是否禁止背景点击
+      })
+      try {
+        // 如果已经点赞，则取消点赞
+        if (this.article.attitude === 1) {
+          await deleteLike(this.articleId)
+          this.article.attitude = -1
+          this.$toast.success('取消点赞')
+        } else {
+          // 否则添加点赞
+          await addLike(this.articleId)
+          this.article.attitude = 1
+          this.$toast.success('点赞成功')
         }
       } catch (err) {
         console.log(err)
