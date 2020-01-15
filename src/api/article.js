@@ -24,3 +24,27 @@ export const getArticleById = articleId => {
     url: `/app/v1_0/articles/${articleId}`
   })
 }
+
+/**
+ * 收藏指定文章
+ */
+export const addCollect = articleId => {
+  return request({
+    method: 'POST',
+    url: '/app/v1_0/article/collections',
+    data: {
+      target: articleId
+    }
+  })
+}
+
+/**
+ * 取消收藏
+ */
+export const deleteCollect = articleId => {
+  return request({
+    method: 'DELETE',
+    url: `/app/v1_0/article/collections/${articleId}`
+
+  })
+}
