@@ -52,6 +52,7 @@
         class="btn"
         type="default"
         size="small"
+        @click="LoadArticle"
       >点击重试</van-button>
     </div>
     <!-- /加载失败提示 -->
