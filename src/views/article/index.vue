@@ -60,6 +60,8 @@
           v-for="(comment, index) in articleComment.list"
           :key="index"
           :comment="comment"
+
+          @click-reply="isReplyShow = true"
         />
         <!-- <van-cell
           v-for="(comment, index) in articleComment.list"
@@ -137,6 +139,14 @@
         </van-popup>
 
      <!-- /发布文章评论 -->
+     <!-- 评论回复 -->
+       <van-popup
+        v-model="isReplyShow"
+        position="bottom"
+        style="height:50%">
+          评论回复
+        </van-popup>
+     <!-- /评论回复 -->
   </div>
 </template>
 
@@ -177,7 +187,8 @@ export default {
         totalCount: 0// 总条数
       },
       isPostShow: false, // 发布评论的显示
-      postMessage: ''// 发布评论输入内容
+      postMessage: '', // 发布评论输入内容
+      isReplyShow: false// 给评论回复时候弹层的显示状态
     }
   },
   computed: {},
