@@ -4,6 +4,7 @@ import router from './router'
 import store from './store'
 import './untils/register-vant.js'
 import './untils/validation'
+import './untils/datetime'
 // 加载全局样式
 // 注意：该样式文件要放到第三方样式之后
 import '@/styles/index.less'
