@@ -37,6 +37,7 @@
           </div>
         </div>
         <van-button
+        v-if="!$store.state.user || article.aut_id!==$store.state.user.id"
         class="follow-btn"
         :type="article.is_followed ? 'default':'info'"
         size="small"
