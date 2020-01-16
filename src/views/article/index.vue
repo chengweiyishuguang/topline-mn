@@ -126,7 +126,13 @@
             placeholder="请输入留言"
             show-word-limit
           />
-          <van-button size="small" type="primary">发布</van-button>
+          <van-button
+           size="small"
+           type="primary"
+           @click="onAddComment"
+           :disabled="!postMessage"
+
+           >发布</van-button>
           </div>
         </van-popup>
 
@@ -144,7 +150,7 @@ import {
   deleteLike
 } from '@/api/article'
 import { addFollow, deleteFollow } from '@/api/user'
-import { getComments } from '@/api/comment'
+import { getComments, addComment } from '@/api/comment'
 import CommentItem from './components/comment-item'
 
 export default {
@@ -287,6 +293,37 @@ export default {
         articleComment.offset = data.data.last_id // 更新获取下一页数据的页码
       } else {
         articleComment.finished = true // 没有数据了，关闭加载更多
+      }
+    },
+    async onAddComment () {
+      // 1拿到数据
+      const postMessage = this.postMessage
+      // 非空校验
+      if (!postMessage) {
+        return
+      }
+      this.$toast.loading({
+        duration: 0, // 持续展示
+        message: '发布中...',
+        forbidClick: true
+      })
+      try {
+        const { data } = await addComment({
+          target: this.articleId,
+          content: postMessage
+        })
+        // 关闭发布弹层
+        this.isPostShow = false
+        // 将最新发布的评论展示到列表顶部
+        this.articleComment.list.unshift(data.data.new_obj)
+        // 更新文章评论总数量
+        this.articleComment.totalCount++
+        // 清空文本框
+        this.postMessage = ''
+        this.$toast.success('发布成功')
+      } catch (err) {
+        console.log(err)
+        this.$toast.fail('发布失败')
       }
     }
   }
