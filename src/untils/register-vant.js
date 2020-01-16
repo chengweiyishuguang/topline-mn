@@ -21,7 +21,8 @@ import {
   PullRefresh,
   Popup,
   Search,
-  Loading
+  Loading,
+  Divider
 
 } from 'vant'
 Vue
@@ -46,3 +47,4 @@ Vue
   .use(Popup)
   .use(Search)
   .use(Loading)
+  .use(Divider)
