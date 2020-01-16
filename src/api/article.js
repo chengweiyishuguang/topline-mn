@@ -68,6 +68,5 @@ export const deleteLike = articleId => {
   return request({
     method: 'DELETE',
     url: `/app/v1_0/article/likings/${articleId}`
-
   })
 }
