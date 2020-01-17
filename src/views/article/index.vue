@@ -61,7 +61,8 @@
           :key="index"
           :comment="comment"
 
-          @click-reply="isReplyShow = true"
+          @click-reply="onReplyShow"
+
         />
         <!-- <van-cell
           v-for="(comment, index) in articleComment.list"
@@ -143,8 +144,17 @@
        <van-popup
         v-model="isReplyShow"
         position="bottom"
-        style="height:50%">
-          评论回复
+        style="height:95%">
+<!--v-if是条件渲染，当条件为true，则渲染组件，当条件为false，则销毁组件
+能解决按钮懒加载的问题
+  -->
+        <comment-reply
+
+        v-if="isReplyShow"
+        @click-close="isReplyShow=false"
+        :comment="currentComment"
+        />
+
         </van-popup>
      <!-- /评论回复 -->
   </div>
@@ -162,11 +172,13 @@ import {
 import { addFollow, deleteFollow } from '@/api/user'
 import { getComments, addComment } from '@/api/comment'
 import CommentItem from './components/comment-item'
+import CommentReply from './components/comment-reply'
 
 export default {
   name: 'ArticlePage',
   components: {
-    CommentItem
+    CommentItem,
+    CommentReply
   },
   props: {
     articleId: {
@@ -188,7 +200,9 @@ export default {
       },
       isPostShow: false, // 发布评论的显示
       postMessage: '', // 发布评论输入内容
-      isReplyShow: false// 给评论回复时候弹层的显示状态
+      isReplyShow: false, // 给评论回复时候弹层的显示状态
+      currentComment: {}// 点击评论回复的那个对象
+
     }
   },
   computed: {},
@@ -336,6 +350,11 @@ export default {
         console.log(err)
         this.$toast.fail('发布失败')
       }
+    },
+    async onReplyShow (comment) {
+      // 将子组件传给我的评论数据存起来
+      this.currentComment = comment
+      this.isReplyShow = true
     }
   }
 }
