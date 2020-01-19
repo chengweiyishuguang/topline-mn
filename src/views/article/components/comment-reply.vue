@@ -54,8 +54,8 @@
       position="bottom"
     >
   <post-comment
-    v-model="PostMessage"
-  @click-post="onPost"
+    v-model="postMessage"
+    @click-post="onPost"
 
   />
     </van-popup>
@@ -65,7 +65,7 @@
 
 <script>
 import CommentItem from './comment-item'
-import { getComments } from '@/api/comment'
+import { getComments, addComment } from '@/api/comment'
 import PostComment from './post-comment'
 export default {
   name: 'commentReply',
@@ -77,8 +77,14 @@ export default {
     comment: {
       type: Object,
       required: true
+    },
+    articleId: {
+      type: [Object, Number, String],
+      required: true
+
     }
   },
+
   data () {
     return {
       list: [],
@@ -87,30 +93,10 @@ export default {
       offset: null,
       limit: 20,
       isPostShow: false, // 发布回复的显示状态
-      PostMessage: ''
+      postMessage: ''
     }
   },
   methods: {
-    // async onLoad () {
-    //   // 1请求获取当前数据
-    //   const { data } = await getComments({
-    //     type: 'c',
-    //     source: this.comment.com_id.toString(),
-    //     offset: this.offset,
-    //     limit: this.limit
-    //   })
-    //   // 2将数据添加到列表中
-    //   const { results } = data.data
-    //   this.list.push(...results)
-    //   // 3关闭loading
-    //   this.loading = false
-    //   // 4判断数据是否加载完成
-    //   if (results.length) {
-    //     this.offset = data.data.last_id
-    //   } else {
-    //     this.finished = true
-    //   }
-    // }
     async onLoad () {
       console.log('onLoad')
       // 1. 请求获取数据
@@ -133,7 +119,36 @@ export default {
       }
     },
     async onPost () {
-      console.log('on post')
+      const postMessage = this.postMessage
+      // 非空校验
+      if (!postMessage) {
+        return
+      }
+      this.$toast.loading({
+        duration: 0, // 持续展示 toast
+        message: '发布中...',
+        forbidClick: true // 是否禁止背景点击
+      })
+      try {
+        // 2. 请求提交
+        const { data } = await addComment({
+          target: this.comment.com_id.toString(), // 评论的目标id（评论文章即为文章id，对评论进行回复则为评论id）
+          content: postMessage, // 评论内容
+          art_id: this.articleId.toString() // 文章id，对评论内容发表回复时，需要传递此参数，表明所属文章id。对文章进行评论，不要传此参数。
+        })
+        // 关闭发布评论的弹层
+        this.isPostShow = false
+        // 将最新发布的评论展示到列表的顶部
+        this.list.unshift(data.data.new_obj)
+        // 更新文章评论的回复总数量
+        this.comment.reply_count++
+        // 清空文本框
+        this.postMessage = ''
+        this.$toast.success('发布成功')
+      } catch (err) {
+        console.log(err)
+        this.$toast.fail('发布失败')
+      }
     }
   }
 

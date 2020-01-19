@@ -1,7 +1,6 @@
 <template>
 <div class="post-comment">
     <van-field
-    v-model="message"
           class="post-field"
             rows="2"
             autosize

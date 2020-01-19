@@ -3,7 +3,7 @@
  */
 import request from '@/untils/request'
 /**
- *获取指定文章评论列表
+ *获取指定文章评论列表或者评论回复列表
  */
 export const getComments = params => {
   return request({
