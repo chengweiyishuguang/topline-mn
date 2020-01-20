@@ -11,23 +11,44 @@
     width="30"
     height="30"
     round
-     src="https://img.yzcdn.cn/vant/cat.jpeg"
+     :src="user.photo"
     />
 
 </van-cell>
 
-  <van-cell title="昵称" value="黑马头条号" is-link/>
-  <van-cell title="介绍" value="hell word" is-link/>
-  <van-cell title="性别" value="男" is-link/>
-  <van-cell title="生日" value="2015-1-15" is-link/>
+  <van-cell title="昵称" :value="user.name" is-link/>
+  <!-- <van-cell title="介绍" value="hell word" is-link/> -->
+  <van-cell title="性别" :value="user.gender=== 0 ?'男':'女'" is-link/>
+  <van-cell title="生日" :value="user.birthday" is-link/>
 </van-cell-group>
 
   </div>
 </template>
 
 <script>
+import { getUserProfile } from '@/api/user'
 export default {
-  name: 'userProfile'
+  name: 'userProfile',
+  data () {
+    return {
+      user: {}
+    }
+  },
+  methods: {
+    async loadProfile () {
+      try {
+        const { data } = await getUserProfile()
+        this.user = data.data
+      } catch (err) {
+        console.log(err)
+        this.$toast.file('获取失败')
+      }
+    }
+  },
+  created () {
+    this.loadProfile()
+  }
+
 }
 </script>
 
