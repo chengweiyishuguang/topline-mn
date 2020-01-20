@@ -16,22 +16,36 @@
 
 </van-cell>
 
-  <van-cell title="昵称" :value="user.name" is-link/>
+  <van-cell title="昵称"
+  :value="user.name"
+  is-link
+   @click="isEditNameShow=true"/>
   <!-- <van-cell title="介绍" value="hell word" is-link/> -->
   <van-cell title="性别" :value="user.gender=== 0 ?'男':'女'" is-link/>
   <van-cell title="生日" :value="user.birthday" is-link/>
 </van-cell-group>
-
+<!-- 修改昵称弹层 -->
+  <van-popup
+  v-model="isEditNameShow"
+  position="bottom">
+  <!-- 编辑名字 -->
+  <edit-name />
+  </van-popup>
   </div>
 </template>
 
 <script>
 import { getUserProfile } from '@/api/user'
+import EditName from './components/edit-name'
 export default {
+  components: {
+    EditName
+  },
   name: 'userProfile',
   data () {
     return {
-      user: {}
+      user: {},
+      isEditNameShow: false
     }
   },
   methods: {
