@@ -51,8 +51,13 @@ const routes = [{
   // 参考文档：https://router.vuejs.org/zh/guide/essentials/passing-props.html
   props: true
 
-}
+},
+{
+  path: '/user/profile',
+  name: 'user-profile',
+  component: () => import('@/views/user-profile')
 
+}
 ]
 
 const router = new VueRouter({
