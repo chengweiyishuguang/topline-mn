@@ -8,7 +8,7 @@
   @click-right="$emit('confirm',message)"
 />
 <van-field
- :value='name'
+ :value="name"
  @input="message=$event"
   rows="2"
   autosize
