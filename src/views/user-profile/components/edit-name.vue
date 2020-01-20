@@ -4,9 +4,12 @@
   title="编辑昵称"
   left-text="取消"
   right-text="确定"
+  @click-left="$emit('close')"
+  @click-right="$emit('confirm',message)"
 />
 <van-field
-  v-model="message"
+ :value='name'
+ @input="message=$event"
   rows="2"
   autosize
   type="textarea"
@@ -20,6 +23,12 @@
 <script>
 export default {
   name: 'EditName',
+  props: {
+    name: {
+      type: String,
+      default: ''
+    }
+  },
   data () {
     return {
       message: ''
