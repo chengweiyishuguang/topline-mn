@@ -22,7 +22,8 @@ import {
   Popup,
   Search,
   Loading,
-  Divider
+  Divider,
+  ActionSheet
 
 } from 'vant'
 Vue
@@ -48,3 +49,4 @@ Vue
   .use(Search)
   .use(Loading)
   .use(Divider)
+  .use(ActionSheet)

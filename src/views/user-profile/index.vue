@@ -22,7 +22,11 @@
    @click="isEditNameShow=true"
    />
   <!-- <van-cell title="介绍" value="hell word" is-link/> -->
-  <van-cell title="性别" :value="user.gender=== 0 ?'男':'女'" is-link/>
+  <van-cell
+  title="性别"
+  @click="isEditGenderShow=true"
+  :value="user.gender=== 0 ?'男':'女'"
+  is-link/>
   <van-cell title="生日" :value="user.birthday" is-link/>
 </van-cell-group>
 <!-- 修改昵称弹层 -->
@@ -33,9 +37,18 @@
   <edit-name
   :name="user.name"
   @close="isEditNameShow=false"
-  @confirm ="onSave"
+  @confirm ="onNameConfrim"
    />
   </van-popup>
+  <!-- /修改昵称弹层 -->
+  <!-- 修改性别 -->
+  <van-action-sheet
+  v-model="isEditGenderShow"
+  :actions="actions"
+  @select="onGenderSelect"
+  cancel-text="取消"
+   />
+  <!-- /修改性别 -->
   </div>
 </template>
 
@@ -50,7 +63,13 @@ export default {
   data () {
     return {
       user: {},
-      isEditNameShow: false
+      isEditNameShow: false,
+      isEditGenderShow: false,
+      actions: [
+        { name: '男', value: 0 },
+        { name: '女', value: 1 }
+
+      ]
     }
   },
   methods: {
@@ -80,13 +99,26 @@ export default {
         this.$toast.file('更新失败')
       }
     },
-    async onSave (name) {
+    async onNameConfrim (name) {
       // console.log(name)
 
       await this.saveProfile('name', name)
       // 更新成功以后更新试图
       this.user.name = name
       this.isEditNameShow = false
+    },
+    async onGenderSelect ({ value }) {
+      // 请求更新
+
+      // await this.saveProfile('gender', value)
+      await this.saveProfile('gender', value)
+      this.user.gender = value
+      this.isEditGenderShow = false
+
+      // 更新视图
+      // this.user.gender = value
+      // 关闭上拉菜单
+      // this.isEditGenderShow = false
     }
   },
   created () {
