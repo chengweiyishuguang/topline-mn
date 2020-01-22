@@ -72,6 +72,7 @@
     <van-image-preview
       v-model="isPreviewPhotoShow"
       :images="pewviewImages"
+      @close="file.value=''"
     >
       <van-nav-bar
         slot="cover"
@@ -86,7 +87,7 @@
 </template>
 
 <script>
-import { getUserProfile, updateUserProfile } from '@/api/user'
+import { getUserProfile, updateUserProfile, updateUserPhoto } from '@/api/user'
 import EditName from './components/edit-name'
 import moment from 'moment'
 export default {
@@ -189,8 +190,24 @@ export default {
       // 显示图片预览
       this.isPreviewPhotoShow = true
     },
-    onPhotoConfirm () {
-      console.log('确认')
+    async onPhotoConfirm () {
+      this.$toast.loading({
+        duration: 0, // 持续展示
+        message: '加载中...',
+        forbidClick: true // 是否禁止背景点击
+      })
+      try {
+        const fd = new FormData()
+        fd.append('photo', this.file.files[0])
+        const { data } = await updateUserPhoto(fd)
+        this.user.photo = data.data.photo
+        this.$toast.success('更新成功')
+        // 关闭图片预览
+        this.isPreviewPhotoShow = false
+      } catch (err) {
+        console.log(err)
+        this.$toast.fail('更新失败')
+      }
     }
   },
   created () {
