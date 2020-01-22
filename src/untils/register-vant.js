@@ -23,7 +23,8 @@ import {
   Search,
   Loading,
   Divider,
-  ActionSheet
+  ActionSheet,
+  DatetimePicker
 
 } from 'vant'
 Vue
@@ -50,3 +51,4 @@ Vue
   .use(Loading)
   .use(Divider)
   .use(ActionSheet)
+  .use(DatetimePicker)
