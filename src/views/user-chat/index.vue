@@ -13,9 +13,9 @@
     <div class="message-list" ref="message-list">
       <div
         class="message-item"
-        :class="{ reverse: item % 3 === 0 }"
-        v-for="item in 20"
-        :key="item"
+        :class="{ reverse: item.isMe }"
+        v-for="(item, index) in messages"
+        :key="index"
       >
         <van-image
           class="avatar"
@@ -26,7 +26,7 @@
           src="https://img.yzcdn.cn/vant/cat.jpeg"
         />
         <div class="title">
-          <span>{{ `hello${item}` }}</span>
+          <span>{{item.msg}}</span>
         </div>
       </div>
     </div>
@@ -35,7 +35,12 @@
     <!-- 发送消息 -->
     <van-cell-group class="send-message">
       <van-field v-model="message" center clearable>
-        <van-button slot="button" size="small" type="primary">发送</van-button>
+        <van-button
+        slot="button"
+        size="small"
+        type="primary"
+        @click="onSend"
+        >发送</van-button>
       </van-field>
     </van-cell-group>
     <!-- /发送消息 -->
@@ -43,10 +48,50 @@
 </template>
 
 <script>
+import io from 'socket.io-client'
+import { getItem, setItem } from '@/untils/storage'
 export default {
+  name: 'UserChat',
   data () {
     return {
-      message: ''
+      message: '',
+      socket: null,
+      messages: getItem('chat-messages') || [] // 消息列表
+    }
+  },
+  watch: {
+    messages (val) {
+      setItem('chat-messages', val)
+      const messageList = this.$refs['message-list']
+      this.$nextTick(() => {
+        messageList.scrollTop = messageList.scrollHeight
+      })
+    }
+  },
+  created () {
+    // 建立 WebSocket 通信连接
+    const socket = io('http://ttapi.research.itcast.cn')
+    this.socket = socket
+    socket.on('message', data => {
+      this.messages.push(data)
+    })
+  },
+  methods: {
+    onSend () {
+      const message = this.message
+      if (!message) {
+        return
+      }
+      // 发送消息
+      const data = {
+        msg: message,
+        timestamp: Date.now()
+      }
+      this.socket.emit('message', data)
+      data.isMe = true
+      this.messages.push(data)
+      // 清空文本框
+      this.message = ''
     }
   }
 }

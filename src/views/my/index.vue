@@ -78,6 +78,7 @@
 
 <script>
 import { getUserInfo } from '@/api/user'
+
 export default {
   name: 'MyPage',
   data () {
