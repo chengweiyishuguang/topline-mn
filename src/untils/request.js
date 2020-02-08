@@ -6,6 +6,7 @@ import jsonBig from 'json-bigint'
 // 在javascript 模块中直接import获取容器即可
 // 这里得到的store和你在组件中的this.$store是一样的
 import store from '@/store'
+import router from '@/router'
 const request = axios.create({
   baseURL: 'http://ttapi.research.itcast.cn/' // 基础路径
 })
@@ -37,10 +38,43 @@ request.interceptors.response.use(function (response) {
   // Any status code that lie within the range of 2xx cause this function to trigger
   // Do something with response data
   return response
-}, function (error) {
+}, async function (error) {
   // Any status codes that falls outside the range of 2xx cause this function to trigger
   // Do something with response error
+  if (error.response && error.response.status === 401) {
+    // 1如果没有refresh_token,则直接跳转登录页
+    const user = store.state.user
+    // 如果用户不存在或者用户的refrsh_token也不存在
+    if (!user || !user.refresh_token) {
+      // 直接跳转登录页
+      redirectLogin()
+      return
+    }
+    // 2 如果有则请求更新token
+    try {
+      const { data } = await axios({
+        method: 'PUT',
+        url: 'http://ttapi.research.itcast.cn/app/v1_0/authorizations',
+        headers: {
+          Authorization: `Bearer ${user.refresh_token}`
+        }
+      })
+      // 3 如果刷新token成功了则把新的token更新到容器中
+      store.commit('setUser', {
+        ...user, // 原来的数据不变
+        token: data.data.token// 更新token
+      })
+      // 4.把之前失败的请求发出去
+      // error.config获取的是本次请求相关的配置对象其中包括method,url等信息
+      return request(error.config)
+    } catch (err) {
+      console.log('刷新 token失败', err)
+      this.redirectLogin()
+    }
+  }
   return Promise.reject(error)
 })
-
+function redirectLogin () {
+  router.push('/login')
+}
 export default request
