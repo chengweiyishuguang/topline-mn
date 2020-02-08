@@ -113,8 +113,10 @@ export default {
         // console.log(res)
         this.$store.commit('setUser', res.data.data)
         this.$toast.success('登录成功')
+        // 如果有redirect则跳转到来源页如果没有跳转到首页
+        const redirect = this.$route.query.redirect || '/'
         // 跳转到首页
-        this.$router.push('/')
+        this.$router.push(redirect)
       } catch (error) {
         console.log('登录失败', error)
         this.$toast.fail('登录失败，手机号或验证码错误')

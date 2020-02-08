@@ -75,6 +75,14 @@ request.interceptors.response.use(function (response) {
   return Promise.reject(error)
 })
 function redirectLogin () {
-  router.push('/login')
+  router.push({
+    name: '/login',
+    query: {
+      // 这里使用查询参数把要转回来的路由地址传递给登录页
+      // router.currentRoute 就是当前路由对象，好比我们在组件中的this.$route
+      // 当前路由对象的fullpath就是当前路由路径
+      redirect: router.currentRoute.fullPath
+    }
+  })
 }
 export default request
