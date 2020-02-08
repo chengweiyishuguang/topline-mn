@@ -2,21 +2,29 @@
   <div class="uesr-articles">
     <van-nav-bar title="我的收藏/历史/作品" left-arrow @click-left="$router.back()" />
     <van-tabs v-model="active">
-      <van-tab title="我的收藏">内容 1</van-tab>
-      <van-tab title="我的历史">内容 2</van-tab>
+      <van-tab title="我的收藏">
+          <collect-article/>
+      </van-tab>
+      <van-tab title="我的历史">
+           <history-article/>
+      </van-tab>
       <van-tab title="我的作品">
-          <User-ariticle/>
+          <User-article/>
       </van-tab>
     </van-tabs>
   </div>
 </template>
 
 <script>
-import UserAriticle from './components/article'
+import UserArticle from './components/article'
+import CollectArticle from './components/collect'
+import HistoryArticle from './components/history'
 export default {
   name: 'UserAriticles',
   components: {
-    UserAriticle
+    UserArticle,
+    CollectArticle,
+    HistoryArticle
   },
   data () {
     return {
