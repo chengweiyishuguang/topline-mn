@@ -65,17 +65,19 @@ const routes = [{
 
 },
 {// 我的作品
-  path: '/my-article',
-  component: () => import('@/views/user-articles')
-},
-{// 我的收藏
-  path: '/my-article/collect',
-  component: () => import('@/views/user-articles')
-},
-{// 我的历史
-  path: '/my-article/history',
-  component: () => import('@/views/user-articles')
+  path: '/my-article/:type?', // ?的意思是第二段路径可有可无
+  // 能匹配到/my-article/a//my-article/b/
+  component: () => import('@/views/user-articles'),
+  props: true
 }
+// {// 我的收藏
+//   path: '/my-article/collect',
+//   component: () => import('@/views/user-articles')
+// },
+// {// 我的历史
+//   path: '/my-article/history',
+//   component: () => import('@/views/user-articles')
+// }
 ]
 
 const router = new VueRouter({
