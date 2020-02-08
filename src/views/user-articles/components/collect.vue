@@ -6,7 +6,19 @@
     finished-text="没有更多了"
     @load="onLoad"
     >
-  <van-cell v-for="(article,index) in list" :key="index" :title="article.title" />
+  <van-cell
+  v-for="(article,index) in list"
+  :key="index"
+  :title="article.title"
+  @click="$router.push({
+      //根据name跳转路由的方式
+      //传动态参数
+      name:'article',
+      params:{
+          articleId:article.art_id.toString()
+      }
+  })"
+  />
 </van-list>
   </div>
 </template>

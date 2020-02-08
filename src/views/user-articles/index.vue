@@ -43,6 +43,18 @@ export default {
     return {
       active// 控制激活标签选项
     }
+  },
+  methods: {
+    // 当前页面路由跳转的时候触发这个钩子函数
+    beforeRouteLeave (to, from, next) {
+      // 如果跳转的的文章详情页则把当前页面缓存起来
+      if (to.name === 'article') {
+        this.$store.commit('addCachePage', 'UserArticles')
+      } else {
+        this.$store.commit('removeCachePage', 'UserArticles')
+      }
+      next()
+    }
   }
 }
 </script>

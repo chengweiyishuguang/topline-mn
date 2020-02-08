@@ -8,7 +8,7 @@
  include 可以配置哪些组件缓存
  exclude 胚珠哪些 组件不缓存
   -->
-  <keep-alive :include="cachePages">
+  <keep-alive :include="$store.state.cachePages">
     <router-view></router-view>
   </keep-alive>
 
@@ -21,6 +21,7 @@ export default {
   name: 'App',
   data () {
     return {
+      //
       cachePages: ['TabBar']
     }
   }
