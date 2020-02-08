@@ -63,6 +63,18 @@ const routes = [{
   name: 'user-chat',
   component: () => import('@/views/user-chat')
 
+},
+{// 我的作品
+  path: '/my-article',
+  component: () => import('@/views/user-articles')
+},
+{// 我的收藏
+  path: '/my-article/collect',
+  component: () => import('@/views/user-articles')
+},
+{// 我的历史
+  path: '/my-article/history',
+  component: () => import('@/views/user-articles')
 }
 ]
 
